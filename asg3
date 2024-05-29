@@ -1,0 +1,58 @@
+Assignment 3.
+ 
+	1-
+
+a) Select TO_CHAR(SYSDATE,'DD-MON-YYYY HH12:MM:SS') AS "Current Time and Date" from dual;
+b) Select 2*2 as "Multiplication" from dual;
+c) Select ABS(-15) as "Absolute value" from dual;
+d) Select sqrt(25) from dual;
+e) Select round(15.91,1) from dual;
+f) Select Lower('IVAN BAYROSS') from dual;
+g) Select Upper('ivan bayross') from dual;
+h) Select Add_months('05-MAR-2024',5) from dual;
+i) Select months_between('03-mar-2020','03-dec-2019') from dual;
+j) Select to_date(SYSDATE,'DD/MM/YYYY') from dual;
+
+
+	2-
+
+create table EMP(
+emp_no number(4) PRIMARY KEY check(emp_no BETWEEN 7000 and 8000),
+e_name varchar2(15),
+job varchar2(20),
+mgr number(10),
+hire_date date,
+sal number(20),
+comm number(6) default 0 CHECK(comm <1500),
+dept_name varchar2(10)
+);
+
+insertion -
+
+insert into EMP values(7001,'Ivan Bayross','Manager',NULL,'12-jan-01',30000,100,'ABC');
+insert into EMP values(7002,'Amit Desai','Manager',NULL,'12-jul-01',25000,100,'PQR');
+insert into EMP values(7003,'Maya Joshi','Manager',NULL,'12-jan-02',25000,300,'LMN');
+insert into EMP values(7004,'Peter Joseph','Sales',7002,'12-jan-02',25000,300,'PQR');
+insert into EMP values(7005,'Manchan Dalai','Manager',NULL,'12-apr-02',30000,200,'EFG');
+insert into EMP values(7006,'Senal Mehta','Designer',7001,'12-apr-02',15000,100,'ABC');
+insert into EMP values(7007,'Anil Kambli','Designer',7005,'12-may-01',15000,200,'EFG');
+insert into EMP values(7008,'Seema Apti','Markets',7003,'12-may-01',18000,200,'LMN');
+insert into EMP values(7009,'Vikram Ghosh','Sales',7007,'12-may-01',18100,50,'EFG');
+insert into EMP values(7010,'Anjali Joshi','Designer',7001,'12-may-01',18100,100,'ABC');
+
+	3- Queries :
+
+f) Select * from EMP where e_name like '_i%';
+g) Select * from EMP where job not like 'Manager';              OR             Select * from EMP where not job='Manager';
+h) Select MAX(sal) as "Maximum", MIN(sal) as "Minimum", SUM(sal) as "Total", AVG(sal) as "Average" from EMP;
+i) Select job,MAX(sal) as "Maximum", MIN(sal) as "Minimum", SUM(sal) as "Total", AVG(sal) as "Average" from EMP group by job;
+j) Select COUNT(*) as "No. of managers" from EMP where job = 'Manager';
+k) Select * from EMP where hire_date>'01-jan-80';
+l) Select e_name,sal from EMP where job='Sales' and sal=(Select MAX(sal) from EMP where job='Sales');
+m) Select e_name,sal from EMP where job='Clerk' and sal=(Select MAX(sal) from EMP where job='Clerk');
+n) Select dept_name from EMP where e_name like 'Ford';
+o) Select dept_name from EMP where sal=(Select max(sal) from EMP);
+p) Select e_name from EMP where sal>(Select sal from EMP where e_name like 'Turner');
+
+
+
