@@ -1,0 +1,133 @@
+Assignment 5 :
+
+
+create:
+
+
+create table zipcodes(
+zip number(7) primary key,
+city varchar2(25)
+);
+
+
+create table employees(
+eno number(3) primary key,
+ename varchar2(25),
+zip number(7),
+hdate date,
+foreign key(zip) references zipcodes(zip)
+);
+
+
+create table parts(
+pno number(5) primary key,
+pname varchar2(25),
+qoh number(4),
+price number(4),
+levell number(1)
+);
+
+
+create table customers(
+cno number(3) primary key,
+cname varchar2(25),
+street varchar2(25),
+zip number(7),
+phone number(20),
+foreign key(zip) references zipcodes(zip)
+);
+
+
+
+create table orders(
+ono number(3) primary key,
+cno number(3),
+eno number(3),
+received date,
+shipped date,
+foreign key(cno) references customers(cno),
+foreign key(eno) references employees(eno)
+); 
+
+
+create table odetails(
+ono number(3),
+pno number(5),
+qty varchar2(25),
+foreign key(ono) references orders(ono),
+foreign key(pno) references parts(pno),
+primary key(ono,pno)
+);
+
+
+
+
+insertion :
+
+
+INSERT ALL
+INTO ZIPCODES VALUES(672260,'Wichita')
+INTO ZIPCODES VALUES(606060,'Fort Dodge')
+INTO ZIPCODES VALUES(503020,'Mumbai')
+INTO ZIPCODES VALUES(544440,'Columbia')
+INTO ZIPCODES VALUES(660020,'Liberal')
+INTO ZIPCODES VALUES(611110,'Fort Hays')
+INTO EMPLOYEES VALUES(100,'Jones',672260,'12-dec-1995')
+INTO EMPLOYEES VALUES(101,'Smith',606060,'01-jan-2002')
+INTO EMPLOYEES VALUES(102,'Brown',503020,'01-sep-2015')
+INTO PARTS VALUES(10506,'Part1',200,20,2)
+INTO PARTS VALUES(10507,'Part2',156,20,2)
+INTO PARTS VALUES(10508,'Part3',190,20,2)
+INTO PARTS VALUES(10509,'Part4',200,20,2)
+INTO PARTS VALUES(10601,'Part5',300,25,2)
+INTO PARTS VALUES(10701,'Part6',120,20,3)
+INTO PARTS VALUES(10800,'Part7',140,15,3)
+INTO PARTS VALUES(10900,'Part8',100,25,3)
+INTO CUSTOMERS VALUES(111,'Charles','123 Main Street',672260,3166365555)
+INTO CUSTOMERS VALUES(222,'Bertram','237 Ash Avenue',672260,3166895555)
+INTO CUSTOMERS VALUES(333,'Barbara','111 Inwood Street', 606060,3161111234)
+INTO ORDERS VALUES(120,111,100,'10-dec-2019','12-dec-2019')
+INTO ORDERS VALUES(121,111,100,'12-jan-2020','15-jan-2020')
+INTO ORDERS VALUES(122,222,101,'13-feb-2020','20-feb-2020')
+INTO ORDERS VALUES(123,333,100,'01-mar-2020',NULL)
+INTO ODETAILS VALUES(120,10506,1)
+INTO ODETAILS VALUES(120,10507,1)
+INTO ODETAILS VALUES(120,10508,2)
+INTO ODETAILS VALUES(120,10509,3)
+INTO ODETAILS VALUES(121,10601,4)
+INTO ODETAILS VALUES(122,10601,1)
+INTO ODETAILS VALUES(122,10701,1)
+INTO ODETAILS VALUES(123,10800,1)
+INTO ODETAILS VALUES(123,10900,1)
+SELECT * FROM DUAL;
+
+
+Queries :
+
+a) Select pno,pname from parts where price<20;
+b) Select p.pno from parts p join odetails o on p.pno=o.pno ;
+c) Select * from customers where cname = 's%';
+d) Select o.ono,c.cname from orders o join customers c on o.cno=c.cno where o.shipped is null;
+e) SELECT CNAME, ENAME 
+FROM CUSTOMERS,EMPLOYEES,ORDERS
+WHERE ORDERS.CNO = CUSTOMERS.CNO
+AND ORDERS.ENO=EMPLOYEES.ENO;
+f) Select ename from employees where hdate=(Select min(hdate) from employees);
+g) select pno,pname,price from parts where price>20000 order by pno asc;
+h) SELECT p.pno, p.pname, SUM(od.qty * p.price) AS revenue
+FROM parts p
+JOIN odetails od ON p.pno = od.pno
+GROUP BY p.pno, p.pname;
+i) Select sum(city) from odetails where pno=10601;
+j) select e.eno from employees e join zipcodes z on e.zip=z.zip where z.city='Mumbai';
+
+
+
+
+
+
+
+
+
+
+
