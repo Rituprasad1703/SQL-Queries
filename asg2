@@ -1,0 +1,137 @@
+Assignment 2.
+
+create table CLIENT_MASTER(
+CLIENT_NO varchar2(6) PRIMARY KEY, check(CLIENT_NO like 'C%'),
+NAME varchar2(20) NOT NULL,
+CITY varchar2(15),
+PINCODE number(8),
+STATE_L varchar2(15),
+BAL_DUE number(10,2)
+);
+
+
+create table PRODUCT_MASTER(
+PRODUCT_NO varchar2(6) PRIMARY KEY, check(PRODUCT_NO like 'P%'),
+DESCRIPTION varchar2(15) NOT NULL,
+PROFIT_PERCENT number(4,2) NOT NULL,
+UNIT_MEASURE varchar2(10) NOT NULL,
+QTY_ON_HAND number(8) NOT NULL,
+REORDER_LVL number(8) NOT NULL,
+SELL_PRICE number(8,2) NOT NULL, CHECK (SELL_PRICE <> 0),
+COST_PRICE number(8,2) NOT NULL, CHECK (COST_PRICE <> 0)
+);
+
+
+create table SALESMAN_MASTER(
+SALESMAN_NO varchar2(6) PRIMARY KEY, check(SALESMAN_NO like'S%'),
+SALESMAN_NAME varchar(20) NOT NULL,
+ADDRESS1 varchar2(10) NOT NULL,
+ADDRESS2 varchar2(10),
+CITY varchar2(20),
+PINCODE number(7),
+STATE_L1 varchar2(20),
+SAL_AMT number(8,2) NOT NULL, CHECK (SAL_AMT <> 0),
+TGT_TO_GET number(6,2) NOT NULL,  CHECK (TGT_TO_GET <> 0),
+YTD_SALES number(6,2) NOT NULL,
+REMARKS varchar2(20)
+);
+
+
+create table SALES_ORDER(
+ORDER_NO varchar2(6) PRIMARY KEY, check(ORDER_NO like 'O%'),
+DELY_DATE date,
+CLIENT_NO varchar2(6) ,
+DELY_ADDRESS varchar2(25),
+SALESMAN_NO varchar2(6),
+DELY_TYPE char(1) default 'F' CHECK(DELY_TYPE in('P','F') ),
+BILLED_YN char(1),
+ORDER_DATE date, CHECK(DELY_DATE>=ORDER_DATE),
+ORDER_STATUS varchar2(10),
+FOREIGN KEY(SALESMAN_NO) REFERENCES SALESMAN_MASTER(SALESMAN_NO),
+FOREIGN KEY(CLIENT_NO) REFERENCES CLIENT_MASTER(CLIENT_NO)
+);
+
+
+
+create table SALES_ORDER_DETAILS(
+ORDER_NO varchar2(6),
+PRODUCT_NO varchar2(6),
+QTY_ORDERED number(8),
+QTY_DISP number(8),
+PRODUCT_RATE number(10,2),
+FOREIGN KEY(ORDER_NO) REFERENCES SALES_ORDER(ORDER_NO),
+FOREIGN KEY(PRODUCT_NO) REFERENCES PRODUCT_MASTER(PRODUCT_NO),
+PRIMARY KEY (ORDER_NO,PRODUCT_NO)
+);
+
+
+
+insertion -
+
+insert into CLIENT_MASTER values('C00001','Ivan Bayross','Mumbai',400054,'Maharashtra',15000);
+insert into CLIENT_MASTER values('C00002','Mamta Majumdar','Madras',780001,'Tamil Nadu',0);
+insert into CLIENT_MASTER values('C00003','Chhaya Bankar','Mumbai',400057,'Maharashtra',5000);
+insert into CLIENT_MASTER values('C00004','Ashwini Joshi','Bangalore',560001,'Karnataka',2000);
+insert into CLIENT_MASTER values('C00005','Hansel Colaco','Mumbai',400060,'Maharashtra',2000);
+insert into CLIENT_MASTER values('C00006','Deepak Sharma','Mangalore',560050,'Karnataka',0);
+
+
+insert into PRODUCT_MASTER values('P00001','T-shirts','5','Piece',200,50,350,250);
+insert into PRODUCT_MASTER values('P0345','Shirts','6','Piece',150,50,500,350);
+insert into PRODUCT_MASTER values('P06734','Cotton Jeans','5','Piece',100,20,600,450);
+insert into PRODUCT_MASTER values('P07865','Jeans','5','Piece',100,20,750,500);
+insert into PRODUCT_MASTER values('P07868','Trousers','2','Piece',150,50,850,550);
+insert into PRODUCT_MASTER values('P07885','PuM-Overs','2.5','Piece',80,30,700,450);
+insert into PRODUCT_MASTER values('P07965','Denim-shirts','4','Piece',100,40,350,250);
+insert into PRODUCT_MASTER values('P07975','Lyers-Tops','5','Piece',70,30,300,175);
+insert into PRODUCT_MASTER values('P08865','skirts','5','Piece',75,30,450,300);
+
+
+insert into SALESMAN_MASTER values('S00001','Aman','A/14','Worli','Mumbai',400002,'Maharashtra',3000,100,50,'Good');
+insert into SALESMAN_MASTER values('S00002','Omkar','65','Nariman','Mumbai',400001,'Maharashtra',3000,200,100,'Good');
+insert into SALESMAN_MASTER values('S00003','Raj','P-7','Bandra','Mumbai',400032,'Maharashtra',3000,200,100,'Good');
+insert into SALESMAN_MASTER values('S00004','Ashish','A/5','Juhu','Mumbai',400044,'Maharashtra',3500,200,150,'Good');
+
+
+insert into SALES_ORDER values('O19001','12-JUN-04','C00001','P/2','S00001',DEFAULT,'N','20-JUL-02','InProcess');
+insert into SALES_ORDER values('O19002','25-JUN-04','C00002','K/5','S00002','P','N','27-JUN-02','Cancelled');
+insert into SALES_ORDER values('O46865','18-FEB-04','C00003','3/9','S00003',DEFAULT,'Y','20-FEB-02','Fulfilled');
+insert into SALES_ORDER values('O19003','03-APR-04','C00001','P9/2','S00001',DEFAULT,'Y','07-APR-02','Fulfilled');
+insert into SALES_ORDER values('O46866','20-MAY-04','C00004','G/2','S00001','P','N','22-MAY-02','Cancelled');
+insert into SALES_ORDER values('O19008','24-MAY-04','C00005','C/21','S00004',DEFAULT,'N','26-JUL-02','InProcess');
+
+
+
+insert into SALES_ORDER_DETAILS values('O19001','P00001',4,4,525);
+insert into SALES_ORDER_DETAILS values('O19001','P07965',2,1,8400);
+insert into SALES_ORDER_DETAILS values('O19001','P07885',2,1,5250);
+insert into SALES_ORDER_DETAILS values('O19002','P00001',10,0,525);
+insert into SALES_ORDER_DETAILS values('O46865','P07868',3,3,3150);
+insert into SALES_ORDER_DETAILS values('O46865','P07885',3,1,5250);
+insert into SALES_ORDER_DETAILS values('O46865','P00001',10,10,525);
+insert into SALES_ORDER_DETAILS values('O46865','P0345',4,4,1050);
+insert into SALES_ORDER_DETAILS values('O19003','P0345',2,2,1050);
+insert into SALES_ORDER_DETAILS values('O19003','P06734',1,1,12000);
+insert into SALES_ORDER_DETAILS values('O46866','P07965',1,0,8400);
+insert into SALES_ORDER_DETAILS values('O46866','P07975',1,0,1050);
+insert into SALES_ORDER_DETAILS values('O19008','P00001',10,5,525);
+insert into SALES_ORDER_DETAILS values('O19008','P07975',5,3,1050);
+
+
+Queries -
+
+1. Select NAME from CLIENT_MASTER where NAME LIKE '_a%';
+2. Select NAME,CITY from CLIENT_MASTER where CITY LIKE '_a%';
+3. Select * from CLIENT_MASTER where CITY IN ('Bombay','Delhi');    OR     Select * from CLIENT_MASTER where CITY = 'Bombay' OR CITY='Delhi';
+4. Select NAME from CLIENT_MASTER where BAL_DUE>10000;
+5. Select * from SALES_ORDER where ORDER_DATE LIKE '%JAN%';
+6. Select ORDER_NO,DELY_DATE,ORDER_DATE,ORDER_STATUS from SALES_ORDER where CLIENT_NO='C00001' OR CLIENT_NO='C00002';
+7. Select * from PRODUCT_MASTER where SELL_PRICE>2000 AND SELL_PRICE<=5000;    OR      Select * from PRODUCT_MASTER where SELL_PRICE BETWEEN 2001 AND 5000;
+8. i) Select * from PRODUCT_MASTER where SELL_PRICE>1500;              ii) Select PRODUCT_NO,DESCRIPTION,SELL_PRICE, SELL_PRICE*0.15 AS "NEW_PRICE" from PRODUCT_MASTER;
+9. Select NAME,CITY,STATE_L from CLIENT_MASTER where STATE_L<>'Maharashtra';      can use WHERE NOT as well
+10. Select COUNT(ORDER_NO) from SALES_ORDER;
+11. Select AVG(COST_PRICE) from PRODUCT_MASTER;
+12. Select MAX(COST_PRICE) AS "Maximum Price", MIN(COST_PRICE) AS "Minimum Price" from PRODUCT_MASTER;
+13. Select COUNT(PRODUCT_NO) from PRODUCT_MASTER where COST_PRICE>=1500;
+14. Select * from PRODUCT_MASTER where QTY_ON_HAND<REORDER_LVL;
+15. Select ORDER_NO, ORDER_DATE from SALES_ORDER;
