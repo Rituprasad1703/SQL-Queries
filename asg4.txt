@@ -1,0 +1,151 @@
+Assignment 4.
+
+
+	1->
+
+create:
+
+create table Sailors(
+s_id varchar2(10) not null primary key,
+s_name varchar2(20),
+rating number(2),
+age number(3)
+);
+
+create table Boats(
+b_id varchar2(10) not null primary key,
+b_name varchar2(20),
+color varchar2(10)
+);
+
+
+create table Reserves(
+s_id varchar2(10),
+b_id varchar2(20),
+day varchar2(15),
+foreign key(s_id) references Sailors(s_id),
+foreign key(b_id) references Boats(b_id),
+primary key(s_id,b_id)
+);
+
+
+insert:
+
+insert into Sailors values('S001','John',5,25);
+insert into Sailors values('S002','Jack',4,26);
+insert into Sailors values('S003','Tarun',4,28);
+insert into Sailors values('S004','Tanmay',5,68);
+insert into Sailors values('S005','Tamal',4,62);
+insert into Sailors values('S006','Joseph',5,64);
+
+
+insert into Boats values('B001','Ferry','green');
+insert into Boats values('B002','Ferry','red');
+insert into Boats values('B003','Sails','violet');
+insert into Boats values('B004','Ferry','black');
+insert into Boats values('B005','Peter','red');
+insert into Boats values('B006','Pop','green');
+insert into Boats values('B007','Navy','blue');
+insert into Boats values('B008','Swam','orange');
+
+
+insert into Reserves values('S001','B001','Monday');
+insert into Reserves values('S002','B002','Tuesday');
+insert into Reserves values('S003','B005','Wednesday');
+insert into Reserves values('S004','B006','Thursday');
+insert into Reserves values('S005','B006','Friday');
+insert into Reserves values('S006','B003','Saturday');
+insert into Reserves values('S006','B008','Monday');
+insert into Reserves values('S005','B008','Sunday');
+
+
+Queries :
+
+a) Select s.s_name,b.color from Reserves r join Sailors s on r.s_id=s.s_id join Boats b on r.b_id=b.b_id where s_name='Tarun';
+b) Select s.s_id, s.s_name from Sailors s join Reserves r on s.s_id=r.s_id where day='Monday' AND r.b_id is not null;
+c) Select b_id,b_name from Boats where color='red' or color='green';
+d) Delete from Sailors where age>60;
+Delete from Reserves r where r.s_id in (Select s.s_id from Sailors s where age>60);
+
+
+
+	2->
+
+create :
+
+create table Teacher(
+t_id varchar2(5) not null primary key,
+name varchar2(20),
+dept varchar2(10)
+);
+
+
+create table Subject(
+sub_no number(5) not null primary key,
+subtitle varchar2(20)
+);
+
+
+create table TaughtBy(
+t_id varchar2(5),
+sub_no number(5),
+foreign key(t_id) references Teacher(t_id),
+foreign key(sub_no) references Subject(sub_no),
+primary key(t_id,sub_no)
+);
+
+
+create table Student(
+roll_no number(10) not null primary key,
+s_name varchar2(15),
+city varchar2(20)
+);
+
+
+insert :
+
+
+insert into Teacher values('T001','Amit Halder','Physics');
+insert into Teacher values('T002','Rita Guin','Statistics');
+insert into Teacher values('T003','Swastika Kayal','Biology');
+insert into Teacher values('T004','Seema Bhaduri','Maths');
+insert into Teacher values('T005','Manash Maity','Physics');
+insert into Teacher values('T006','Suresh Jain','ComputerSc');
+
+
+insert into Subject values(1,'Thermodynamics');
+insert into Subject values(2,'Organic Chemistry');
+insert into Subject values(3,'DBMS');
+insert into Subject values(4,'Circulation');
+insert into Subject values(5,'Thermodynamics');
+
+
+insert into TaughtBy values('T001',2);
+insert into TaughtBy values('T002',4);
+insert into TaughtBy values('T003',3);
+insert into TaughtBy values('T004',1);
+insert into TaughtBy values('T005',1);
+insert into TaughtBy values('T006',4);
+insert into TaughtBy values('T001',5);
+
+
+insert into Student values(21,'Shyam','Kolkata');
+insert into Student values(22,'Joseph','Mumbai');
+insert into Student values(23,'Ram','Kolkata');
+insert into Student values(26,'John','Kolkata');
+insert into Student values(25,'Shwan','Kolkata');
+insert into Student values(28,'Nita','Mumbai');
+
+
+Queries :
+
+a) Select t.name from Teacher t join TaughtBy t1 on t.t_id=t1.t_id join Subject s on t1.sub_no=s.sub_no where t.dept='Physics' and s.subtitle='Thermodynamics';
+b) update Subject set subtitle='RDBMS' where subtitle='DBMS';
+c) select * from Student where city='Kolkata' and roll_no between 20 and 25;
+d) Select * from Student where city='Kolkata' order by roll_no desc;
+
+
+
+
+
+
